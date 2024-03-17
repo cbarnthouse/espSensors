@@ -26,7 +26,7 @@ void setup_wifi() {
   WiFi.begin(ssid, password);
 int wifiAttempts = 0;
   while (WiFi.status() != WL_CONNECTED && wifiAttempts < maxWifiAttempts) {
-    delay(500);
+    delay(400);
     Serial.print(".");
     wifiAttempts++;
   }
