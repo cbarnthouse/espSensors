@@ -4,10 +4,10 @@
 
 //Define parameters for Lowe power based on heltec example
 #define timetillsleep 3000
-#define timetillwakeup 300000
+#define timetillwakeup 30000
 static TimerEvent_t sleep;
 static TimerEvent_t wakeUp;
-uint8_t lowpower=1;
+uint8_t lowpower=0;
 uint16_t bootCount;
 
 //Lora details
@@ -28,6 +28,7 @@ char txPacket[BUFFER_SIZE];
 static RadioEvents_t RadioEvents;
 
 void setup() {
+  pinMode(13, OUTPUT);
   Serial.begin(115200);
   delay(1000);
 
@@ -58,9 +59,13 @@ void loop() {
 
   // Send Sensor Reading
   String reading = "/home/soil/temp:" + String(t);
+  digitalWrite(13, HIGH);
   Radio.Send((uint8_t *)reading.c_str(), reading.length() );
+  delay(250);
   Serial.println("Sent over LoRa radio");
   delay(1500);
+  digitalWrite(13, LOW);
+
 
 //Send Battery level
   uint16_t voltage = getBatteryVoltage();

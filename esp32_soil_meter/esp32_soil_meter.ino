@@ -9,8 +9,9 @@ const char* mqtt_server = "172.16.129.15";
 const int soilMoisturePin = 34; // Analog pin connected to the soil moisture sensor
 const int ledPin = 2; // Built-in LED pin
 const int maxWifiAttempts = 5;
+const int maxMqttAttempts = 5;
 #define uS_TO_S_FACTOR 1000000  /* Conversion factor for micro seconds to seconds */
-#define TIME_TO_SLEEP  600      /* Time ESP32 will go to sleep (in seconds) */
+#define TIME_TO_SLEEP  1800      /* Time ESP32 will go to sleep (in seconds) */
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -38,7 +39,9 @@ int wifiAttempts = 0;
 }
 
 void reconnect() {
-  while (!client.connected()) {
+  int mqttAttempts = 0;
+  while (!client.connected() && mqttAttempts < maxMqttAttempts) {
+    mqttAttempts++;
     Serial.print("Attempting MQTT connection...");
     String clientId = "ESP32Client-Soil";
     clientId += String(random(0xffff), HEX);
